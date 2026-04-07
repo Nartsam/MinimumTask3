@@ -34,4 +34,4 @@ google-services.json
 *.jar
 *.so
 *.zip
-.claude
+.claude/
