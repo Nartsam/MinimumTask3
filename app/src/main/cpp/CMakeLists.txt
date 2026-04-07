@@ -153,7 +153,6 @@ add_library(openxr_demo MODULE
 
         ${CMAKE_CURRENT_SOURCE_DIR}/app/arengine.cpp
 #        ${CMAKE_CURRENT_SOURCE_DIR}/app/test_engine.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/app/test_server.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/third_party/input-offline/InputOffline.cpp    # 测试 CameraTracking 的离线输入需要引入该文件
 # =============================== Import RudeSocket ==============================
         ${CMAKE_CURRENT_SOURCE_DIR}/third_party/rudesocket-1.2.0/socket.cpp
@@ -170,22 +169,9 @@ add_library(openxr_demo MODULE
         ${CMAKE_CURRENT_SOURCE_DIR}/third_party/rudesocket-1.2.0/socket_connect_tunnel.cpp
 # =============================== RudeSocket Done ==============================
         ${CMAKE_CURRENT_SOURCE_DIR}/app/scene.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/app/config.hpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/app/gesture.hpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/app/databank.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/app/utilsmym.hpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/app/modelmanager.hpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/app/recorder.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/app/scenegui.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/app/humandetector.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/app/scene_camera_tracking_test.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/app/scene_marker_test_rpc.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/app/scene_3dtracking_test.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/app/scene_task3_step1.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/app/scene_task3_welcome.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/app/scene_recorder.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/app/scene_model_edit_test.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/app/scene_customer.cpp
 )
 
 

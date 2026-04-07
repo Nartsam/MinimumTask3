@@ -17,19 +17,9 @@
 #include "app/scene.h"
 #include "opencv2/opencv.hpp"
 #include "utilsmym.hpp"
-#include "config.hpp"
 #include "scenegui.h"
-#include "modelmanager.hpp"
-#include "databank.hpp"
-#include "gesture.hpp"
 
 
-//------------- Only For Debug ----------------
-static std::vector<std::shared_ptr<IScene>> TrashedSceneList;
-static unsigned long long RenderedFrames;
-static bool SetupSceneSwitched=false; //should be false
-static glm::mat4 ViewMat;
-//---------------------------------------------
 
 class Application : public IApplication {
 public:
@@ -50,8 +40,7 @@ public:
 private:
     bool setCurrentScene(const std::string &name){
         if(m_scene){
-            TrashedSceneList.emplace_back(m_scene);
-            //m_scene->close();
+            m_scene->close();
             m_scene=nullptr;
         }
         auto ptr=createScene(name, this);
@@ -174,79 +163,14 @@ bool Application::initialize(const XrInstance instance, const XrSession session)
     const XrGraphicsBindingOpenGLESAndroidKHR *binding = reinterpret_cast<const XrGraphicsBindingOpenGLESAndroidKHR*>(mGraphicsPlugin->GetGraphicsBinding());
     mPlayer->initialize(binding->display);
 
-//    m_scene_list={"task3_welcome","scene_customer"};
-    m_scene_list={"scene_customer","3dtracking_test","scene_customer"};
+    m_scene_list={"task3_welcome"};
     m_current_scene=0;
 
 
-    this->setCurrentScene(m_scene_list[m_current_scene]); this->m_scene->changeStep(12);
-//    this->setCurrentScene("scene_customer");  //this->m_scene->changeStep(7);
-//    this->setCurrentScene("scene_recorder");
-//    this->setCurrentScene("3dtracking_test");
-//    this->setCurrentScene("camera_tracking_test");
-//    this->setCurrentScene("task3_step1");
-//    this->setCurrentScene("model_edit_test"); //this->m_scene->changeStep(3);
+    this->setCurrentScene(m_scene_list[m_current_scene]);
 
-
-//=========================== App的全局按钮,用来切换 上一步/下一步 ================================
-    SceneGui::ButtonItem nextButton,prevButton;
-    nextButton.width=300; nextButton.height=90; nextButton.scale=glm::vec3{0.22f,0.15f,0.15f}; //nextButton.use_view=false;
-    nextButton.translate_model=glm::translate(glm::mat4(1.0f), glm::vec3(0.2f, 0.2f,-0.3f));   //glm::vec3(1.9f, 1.2f,-5.0f));
-    nextButton.translate_model=glm::rotate(nextButton.translate_model,glm::radians(-20.0f),glm::vec3(0.0f, 1.0f, 0.0f)); //绕Y轴(0,1,0) (+逆-顺)时针旋转20度(角度转弧度)
-    nextButton.image=ConvertBGRImageToRGB(cv::imread(Config::AppDataDir+("/Manual/NextStep.png")));
-    cv::resize(nextButton.image,nextButton.image,{nextButton.width,nextButton.height});
-    nextButton.call=[=](){step_button_clicked(true);};
-
-    prevButton.width=nextButton.width; prevButton.height=nextButton.height; prevButton.scale=nextButton.scale;
-    prevButton.translate_model=glm::translate(glm::mat4(1.0f), glm::vec3(-0.2f, 0.2f,-0.3f));
-    prevButton.translate_model=glm::rotate(prevButton.translate_model,glm::radians(20.0f),glm::vec3(0.0f, 1.0f, 0.0f));
-    prevButton.image=ConvertBGRImageToRGB(cv::imread(Config::AppDataDir+("/Manual/PrevStep.png")));
-    cv::resize(prevButton.image,prevButton.image,{prevButton.width,prevButton.height});
-    prevButton.call=[=](){step_button_clicked(false);};
-
-//    SceneGui::TextItem controlText;
-//    controlText.translate_model=glm::translate(glm::mat4(1.0f),{-1.0f,-0.6f,-3.0f}); controlText.scale={0.3f,0.3f,0.3f}; controlText.text="当前控制方式为: 手势操作";
-//    SceneGui::Global().add_text(controlText,"ControlText");
-    SceneGui::SetGuiOperationTrigger(SceneGui::Controller);
-    auto control_text=SceneGui::Global().get_text_item("ControlText");
-    if(control_text) control_text->text="当前控制方式为: 控制器按键操作";
-
-    nextButton.scale*=glm::vec3(0.3); prevButton.scale*=glm::vec3(0.3);
-    SceneGui::Global().add_button(nextButton,"NextButton"); SceneGui::Global().add_button(prevButton,"PrevButton");
-//================================== 添加手势识别 =======================================
-    Gesture::Global().add_callback(Gesture::SwipeRight,[this](){this->step_button_clicked(true);});
-    Gesture::Global().add_callback(Gesture::SwipeLeft,[this](){this->step_button_clicked(false);});
 //========================= 调试用,将所有标准输出打印到文件中 ===============================
-    /*
-    x值：-67.733185, 167.00327, 163.17899, -66.637032, -210.47235
-    y值：195.91499, 124.32779, -119.44613, -196.22122, -1.5999414
-    z值：95.413139, 94.042427, 97.027565, 99.999786, 99.383713
-    */
-    DataBank::Global().set("tire_average_point",glm::vec3(-2.9320614,0.59509772,97.173326));
-    DataBank::Global().set("axle_average_point",glm::vec3(0.007367, -0.000939, 2.0236));
-    if(1){
-        Config::global().set("HumanDetectorServerIp","192.168.90.82");
-        Config::global().set("HumanDetectorServerPort","8000");
-        Config::global().set("3DTrackingPort","8055");
-
-    }
-//    ModelManager::Manager().add_model_from_file("step1_MyModel2","/storage/emulated/0/RokidData/Model/RM/step_7_9/step_7.gltf",false);
-//    ModelManager::Manager().add_model_from_file("step1_MyModel1",Config::AppDataDir+("/Model/RM/step_7g/step_7.gltf"),false);
-    ModelManager::Manager().make_model_valid("step1_MyModel2");
-    ModelManager::Manager().make_model_valid("step1_MyModel1");
-    ModelManager::Manager().start_model_animation("step1_MyModel2",0);
-    ModelManager::Manager().start_model_animation("step1_MyModel1",0);
-//    ModelManager::Manager().set_model_scale("step1_MyModel2",{0.3,0.3,0.3});
-    ModelManager::Manager().set_model_adjust("step1_MyModel2",glm::translate(glm::mat4(1.0f),{0.3,-0.2,-1}));
-    ModelManager::Manager().set_model_adjust("step1_MyModel1",glm::translate(glm::mat4(1.0f),{0.3,-0.2,-1}));
-
-
-    //向全局SceneGui中添加一张不可见图片，避免在只有TextItem时看不见渲染出来的画面
-    SceneGui::ImageItem default_image_item;
-    default_image_item.image=ConvertBGRImageToRGB(cv::imread(Config::AppDataDir+("/Manual/NextStep.png")));
-    default_image_item.scale={0,0,0};
-    SceneGui::Global().add_image(default_image_item);
-    std::freopen((Config::AppDataDir+"/log.txt").c_str(),"w",stdout);
+//    std::freopen((Config::AppDataDir+"/log.txt").c_str(),"w",stdout);
     return true;
 }
 
@@ -282,7 +206,6 @@ void Application::setHandJointWorldLocation(XrHandJointLocationEXT *location){
 //                infof("Gesture Pos: [%f,%f,%f];",_t.x,_t.y,_t.z)
             }
         }
-        Gesture::Global().set_joints_pose(hand==HAND_RIGHT?Gesture::RIGHT_HAND:Gesture::LEFT_HAND,joints_pose);
     }
 }
 void Application::inputEvent(int leftright,const ApplicationEvent& event) {
@@ -293,36 +216,6 @@ void Application::inputEvent(int leftright,const ApplicationEvent& event) {
 //        }
 //    }
     if(leftright == HAND_LEFT) return; // *** 这里只处理了右手的手势
-    //============== 识别右手捏合动作，用于展开菜单 =================
-    static long long LastRightHandClickTimestamp=0;
-    static int UntriggeredFrames=8;
-    static auto next_button=SceneGui::Global().get_button_item("NextButton");
-    static auto prev_button=SceneGui::Global().get_button_item("PrevButton");
-    if(event.click_trigger){ //识别捏合动作
-        if(LastRightHandClickTimestamp==1) LastRightHandClickTimestamp=CurrentMSecsSinceEpoch();
-        auto duration=CurrentMSecsSinceEpoch()-LastRightHandClickTimestamp;
-        if((duration>600&&duration<20000000)){
-            infof("right hand double clicked")
-
-            glm::vec3 tip_pos=Gesture::Global().get_joint_position(Gesture::FOREFINGER_TIP_INDEX);
-            glm::mat4 view_rotation=ViewMat;
-            view_rotation[3] = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f); // 移除平移部分，只保留旋转
-            glm::mat4 tip_model=glm::translate(glm::mat4(1.0f),tip_pos);
-            auto model=tip_model*glm::inverse(view_rotation);
-            if(next_button){
-                next_button->translate_model=glm::translate(model,glm::vec3{0.1,0.12,-0.1});
-            }
-            if(prev_button){
-                prev_button->translate_model=glm::translate(model,glm::vec3{-0.1,0.12,-0.1});
-            }
-        }
-    }
-    else{
-        if(++UntriggeredFrames>8){
-            LastRightHandClickTimestamp=1;
-        }
-    }
-    //=========================================================
     if (event.controllerEventBit & CONTROLLER_EVENT_BIT_click_trigger) {
         infof("controllerEventBit:0x%02x, event.click_trigger:0x%d", event.controllerEventBit, event.click_trigger);
         mPanel->triggerEvent(event.click_trigger);
@@ -519,50 +412,7 @@ void Application::renderHandTracking(const glm::mat4 &project,const glm::mat4 &v
     }
     mCubeRender->render(project,view,cubes);
 }
-void update_button_state(){
-    glm::vec3 finger_pos=Gesture::Global().get_joint_position(Gesture::FOREFINGER_TIP_INDEX);
-    static std::string NextId="NextButton",PrevId="PrevButton";
-    static auto next_button=SceneGui::Global().get_button_item(NextId);
-    static auto prev_button=SceneGui::Global().get_button_item(PrevId);
-    static long long LastNotPrevTimestamp=0,LastNotNextTimestamp=0;
-    if(next_button){
-        glm::vec3 next_button_pos=next_button->translate_model[3];
-        float next_dist=glm::distance(finger_pos,next_button_pos);
-        if(next_dist<0.1){
-            next_button->covered=true;
-        }
-        else{
-            long long gap=CurrentMSecsSinceEpoch()-LastNotNextTimestamp;
-            if(next_button->covered&&gap<2500&&gap>400) next_button->call();
-            LastNotNextTimestamp=CurrentMSecsSinceEpoch();
-            next_button->covered=false;
-        }
-    }
-    if(prev_button){
-        glm::vec3 prev_button_pos=prev_button->translate_model[3];
-        float prev_dist=glm::distance(finger_pos,prev_button_pos);
-        if(prev_dist<0.1){
-            prev_button->covered=true;
-        }
-        else{
-            long long gap=CurrentMSecsSinceEpoch()-LastNotPrevTimestamp;
-            if(prev_button->covered&&gap<2500&&gap>400) prev_button->call();
-            LastNotPrevTimestamp=CurrentMSecsSinceEpoch();
-            prev_button->covered=false;
-        }
-    }
-
-    //infof("dist: %f %f",next_dist,prev_dist)
-}
 void Application::renderFrame(const XrPosef& pose, const glm::mat4& project, const glm::mat4& view, int32_t eye) {
-    //----------------------Only For Debug ------------------------------
-    if(++RenderedFrames>3&&!SetupSceneSwitched){
-        SetupSceneSwitched=true; switch_scene(1,true);
-        DataBank::Global().set("allow_scene_customer_switch_last_scene",false);
-    }
-    update_button_state();
-    if(eye==1) ViewMat=view;
-    //-------------------------------------------------------------------
     layout();
 //    showDeviceInformation(project, view);
     mPlayer->render(project, view, eye);
@@ -571,14 +421,6 @@ void Application::renderFrame(const XrPosef& pose, const glm::mat4& project, con
     }
     mController->render(project, view);
     renderHandTracking(project, view);
-
-//    Gesture::Global().update(view);
-    //================== 判断上一步/下一步 按钮的可见性 =========================
-    static auto prev_button=SceneGui::Global().get_button_item("PrevButton"),next_button=SceneGui::Global().get_button_item("NextButton");
-    if(prev_button) prev_button->visible=!cannot_go_prev();
-    if(next_button) next_button->visible=!cannot_go_next();
-    if(prev_button&&m_current_scene==1) prev_button->visible=false;
-
 
     SceneGui::Global().render(project,view,eye);
     if(m_scene) m_scene->renderFrame(pose,project,view,eye);

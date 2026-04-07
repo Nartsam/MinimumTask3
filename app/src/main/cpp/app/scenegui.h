@@ -1,6 +1,8 @@
 #ifndef ROKIDOPENXRANDROIDDEMO_SCENEGUI_H
 #define ROKIDOPENXRANDROIDDEMO_SCENEGUI_H
 
+// 显示按钮、提示文字 等基本界面
+
 #include"demos/gui.h"
 #include"demos/text.h"
 #include"opencv2/core.hpp"

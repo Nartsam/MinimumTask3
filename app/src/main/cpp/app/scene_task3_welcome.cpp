@@ -8,10 +8,8 @@
 #include"demos/utils.h"
 #include"glm/gtc/matrix_transform.hpp"
 #include"demos/text.h"
-#include"markerdetector.hpp"
 #include"scenegui.h"
 #include"utilsmym.hpp"
-#include"config.hpp"
 
 using namespace cv;
 
@@ -31,41 +29,23 @@ class SceneTask3Welcome:public IScene {
 public:
     bool initialize(const XrInstance instance,const XrSession session)override{
 //        _eng = construct_engine();
-        SceneGui::ButtonItem button;
         SceneGui::TextItem   text,main_text;
-        SceneGui::ImageItem   image;
 
         glm::mat4 model = glm::mat4(1.0f);
         float scale = 0.5f,width=120, height=80;
         model = glm::translate(model, glm::vec3(-0.0f, -0.3f, 5.0f));
         model = glm::rotate(model, glm::radians(10.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         model = glm::scale(model, glm::vec3(scale * (width / height), scale, 1.0f));
-        button.translate_model=glm::translate(glm::mat4(1.0f),glm::vec3(-0.5f,-0.8f,-2.2f));//model;
-        button.text="Test Button";
-        button.width=width; button.height=height; button.scale=glm::vec3{0.3f};
-        button.call=[=](){infof("Button Clicked, Scale: %.f",scale);};
-        button.image=ConvertBGRImageToRGB(cv::imread(Config::AppDataDir+("/Manual/ImageButton.png")));
-        button.width=button.image.cols; button.height=button.image.rows;
-        cv::resize(button.image,button.image,{button.width,button.height});
 
         text.text="欢迎使用本软件, 按O键进入初始化部分";
         text.translate_model=glm::translate(glm::mat4(1.0f),glm::vec3(-0.44f,0.4f,-3.0f));
         text.scale=glm::vec3{0.9f};
         text.use_view=false;
-//        image.use_view=false;
-        image.translate_model=glm::translate(glm::mat4(1.0f),glm::vec3(-0.0f,0.1f,-4.0f));
-        image.image=ConvertBGRImageToRGB(cv::imread(Config::AppDataDir+("/Image/Logo.png")));
-        image.scale={0.3f,0.3f,0.3f};
-//        cv::resize(image.image,image.image,{},0.6,0.6);
         main_text.text="AR机轮装配引导系统";
-        main_text.translate_model=glm::translate(image.translate_model,{-0.66f,-0.5f,0.f});
+        main_text.translate_model=glm::translate(glm::translate(glm::mat4(1.0f),glm::vec3(-0.0f,0.1f,-4.0f)),{-0.66f,-0.5f,0.f});
         main_text.scale={1.6f,1.6f,1.6f};
 
-
-
-//        gui.add_button(button);
 //        gui.add_text(text);
-        gui.add_image(image);
         gui.add_text(main_text);
 
         return true;

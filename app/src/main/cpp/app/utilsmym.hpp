@@ -3,6 +3,8 @@
 #define ROKIDOPENXRANDROIDDEMO_UTILSMYM_HPP
 
 
+// 一些工具函数
+
 #include<string>
 #include<sstream>
 #include"glm/glm.hpp"
