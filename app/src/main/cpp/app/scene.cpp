@@ -4,6 +4,8 @@
 std::shared_ptr<IScene> createScene(const std::string &name, IApplication *app){
     std::shared_ptr<IScene> _createScene_empty();
     std::shared_ptr<IScene> _createSceneTask3Welcome();
+    std::shared_ptr<IScene> _createSceneRelocTest();
+    std::shared_ptr<IScene> _createScenePlaneDetector();
 
     struct DFunc{
         std::string name;
@@ -14,6 +16,8 @@ std::shared_ptr<IScene> createScene(const std::string &name, IApplication *app){
     DFunc funcs[]= {
             {"empty", _createScene_empty},
             {"task3_welcome",_createSceneTask3Welcome},
+            {"reloc_test",_createSceneRelocTest},
+            {"plane_detector",_createScenePlaneDetector},
             //list other scenes
     };
 

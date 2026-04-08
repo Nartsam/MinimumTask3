@@ -19,6 +19,11 @@
 #include "utilsmym.hpp"
 #include "scenegui.h"
 
+/*
+ * 双击 左/右 方向键切换 上一步/下一步
+*/
+
+
 
 
 class Application : public IApplication {
@@ -163,12 +168,15 @@ bool Application::initialize(const XrInstance instance, const XrSession session)
     const XrGraphicsBindingOpenGLESAndroidKHR *binding = reinterpret_cast<const XrGraphicsBindingOpenGLESAndroidKHR*>(mGraphicsPlugin->GetGraphicsBinding());
     mPlayer->initialize(binding->display);
 
-    m_scene_list={"task3_welcome"};
+    m_scene_list={"reloc_test","plane_detector"};
     m_current_scene=0;
 
 
     this->setCurrentScene(m_scene_list[m_current_scene]);
-
+//====================== 给 SceneGui::Global() 添加一个不可见的图片，避免渲染文字出现乱码 ==========================
+    SceneGui::ImageItem HiddenImage;
+    HiddenImage.image=PureColorMat(1,1); HiddenImage.scale={0,0,0};
+    SceneGui::Global().add_image(HiddenImage);
 //========================= 调试用,将所有标准输出打印到文件中 ===============================
 //    std::freopen((Config::AppDataDir+"/log.txt").c_str(),"w",stdout);
     return true;
@@ -242,7 +250,7 @@ void Application::keypadEvent(const std::string &key_name){
     if(CurrentMSecsSinceEpoch()-LastPressedMap[key_name]<MinGap) return;
     LastPressedMap[key_name]=CurrentMSecsSinceEpoch();
     infof(("Pressed: "+key_name).c_str());
-    if(key_name=="o"){ //Next Step
+    if(key_name=="o"){
 //        if(SceneGui::GuiOperationTrigger==SceneGui::Controller){
 //            SceneGui::SetGuiOperationTrigger(SceneGui::Hand);
 //            auto control_text=SceneGui::Global().get_text_item("ControlText");

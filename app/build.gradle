@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'com.rokid.openxr.android'
+    namespace 'com.minimumtask3.app'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.rokid.openxr.android"
+        applicationId "com.minimumtask3.app"
         minSdk 29
         targetSdk 34
         versionCode 30000

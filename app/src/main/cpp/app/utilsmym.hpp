@@ -310,7 +310,12 @@ inline GLuint MatToTexture(const cv::Mat &image){
 //    else infof("✅ No row padding, alignment is fine.")
     return textureID;
 }
-
+// 获得一个填充 cv::Scalar(B,G,R) (0~255) 的 CV_8UC3 格式的 Mat
+inline cv::Mat PureColorMat(int width,int height,const cv::Scalar &color={0,0,255}){
+    cv::Mat img(height,width,CV_8UC3);
+    img.setTo(color);
+    return img;
+}
 
 inline cv::Mat RokidCameraMatrix,RokidDistCoeffs; //眼镜相机的 内参 和 外参. 这两项在XrOpenCameraPreview的时候被设置
 

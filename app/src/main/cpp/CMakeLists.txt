@@ -59,7 +59,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}
 
 add_subdirectory(${ARENGINE_DIR}/Basic ${CMAKE_BINARY_DIR}/AREngine/Basic)
 
-add_subdirectory(${ARENGINE_DIR}/ObjectTracking2 ${CMAKE_BINARY_DIR}/AREngine/ObjectTracking2)
+#add_subdirectory(${ARENGINE_DIR}/ObjectTracking2 ${CMAKE_BINARY_DIR}/AREngine/ObjectTracking2)
 add_subdirectory(${ARENGINE_DIR}/CameraTracking ${CMAKE_BINARY_DIR}/AREngine/CameraTracking)   # 测试CameraTracking用
 
 
@@ -144,6 +144,7 @@ add_library(openxr_demo MODULE
         ${CMAKE_CURRENT_SOURCE_DIR}/demos/hand.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/demos/cube.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/demos/ray.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/demos/plane.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/demos/guiBase.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/demos/gui.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/demos/text.cpp
@@ -155,23 +156,26 @@ add_library(openxr_demo MODULE
 #        ${CMAKE_CURRENT_SOURCE_DIR}/app/test_engine.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/third_party/input-offline/InputOffline.cpp    # 测试 CameraTracking 的离线输入需要引入该文件
 # =============================== Import RudeSocket ==============================
-        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/rudesocket-1.2.0/socket.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/rudesocket-1.2.0/rude_socketimpl.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/rudesocket-1.2.0/socket_tcpclient.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/rudesocket-1.2.0/socket_comm.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/rudesocket-1.2.0/socket_comm_normal.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/rudesocket-1.2.0/socket_comm_ssh.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/rudesocket-1.2.0/socket_connect.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/rudesocket-1.2.0/socket_connect_normal.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/rudesocket-1.2.0/socket_connect_proxy.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/rudesocket-1.2.0/socket_connect_socks4.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/rudesocket-1.2.0/socket_connect_socks5.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/rudesocket-1.2.0/socket_connect_tunnel.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/RudeSocket/socket.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/RudeSocket/rude_socketimpl.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/RudeSocket/socket_tcpclient.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/RudeSocket/socket_comm.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/RudeSocket/socket_comm_normal.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/RudeSocket/socket_comm_ssh.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/RudeSocket/socket_connect.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/RudeSocket/socket_connect_normal.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/RudeSocket/socket_connect_proxy.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/RudeSocket/socket_connect_socks4.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/RudeSocket/socket_connect_socks5.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/RudeSocket/socket_connect_tunnel.cpp
 # =============================== RudeSocket Done ==============================
         ${CMAKE_CURRENT_SOURCE_DIR}/app/scene.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/app/utilsmym.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/app/scenegui.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/app/scene_task3_welcome.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/scene_reloc.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/netcall.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/scene_plane_detector.cpp
 )
 
 
@@ -194,7 +198,6 @@ target_link_libraries(openxr_demo
         #**************************************************add Engine
         Basic
         GlobalLibs
-        ObjectTracking2
         CameraTracking
         #ObjectTracking
         #**************************************************endof add Engine

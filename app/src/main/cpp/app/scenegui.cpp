@@ -75,16 +75,6 @@ void SceneGui::render_button(const glm::mat4 &p,const glm::mat4 &v,int32_t eye,c
         bool is_intersect=gui_ptr->isIntersectWithLine(mLinePoint,mLineDirection,false);
         gui_ptr->begin();
 
-//        // 调试画鼠标位置
-//        ImVec2 mousePos=ImGui::GetIO().MousePos;
-//        ImGui::GetForegroundDrawList()->AddCircle(mousePos,10,IM_COL32(255,0,0,255),12,2);
-//        ImVec2 winPos=ImGui::GetWindowPos();   // 窗口左上角(全局坐标)
-//        ImVec2 cursor=ImGui::GetCursorScreenPos(); // 下一个Item（按钮）左上角的全局坐标
-//        ImVec2 btnMin=cursor;
-//        ImVec2 btnMax = ImVec2(cursor.x + 100, cursor.y + 50); // 按钮大小
-//        infof("Draw Circle at: %.1f, %.1f, Window Pos: (%.1f, %.1f), Button Min: (%.1f, %.1f)",mousePos.x,mousePos.y, winPos.x, winPos.y, btnMin.x, btnMin.y);
-//        infof("-------------------------item hover: %d",ImGui::IsItemHovered());
-
 
         if(item.image.empty()){
             ImGui::Button(item.text.c_str(),ImVec2(float(item.width),float(item.height)));

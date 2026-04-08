@@ -18,7 +18,7 @@
 #include "app/utilsmym.hpp"
 
 
-bool OPENXR_PROGRAM_USE_HAND_AIM=true; //控制显示手部射线(HAND)还是控制器(CONTROLLER)射线。从宏定义改成了使用全局变量的形式，方便在程序运行时进行修改
+bool OPENXR_PROGRAM_USE_HAND_AIM=false; //控制显示手部射线(HAND)还是控制器(CONTROLLER)射线。从宏定义改成了使用全局变量的形式，方便在程序运行时进行修改
 
 namespace {
 // ******************** 控制显示手部射线(HAND)还是控制器(CONTROLLER)射线 HAND RAY/HAND CONTROLLER***********************

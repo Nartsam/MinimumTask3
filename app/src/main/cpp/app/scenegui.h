@@ -40,7 +40,7 @@ public:
 
 private:
     //设置默认的GUI组件控制方式。另外,如果要改变射线的控制方式,还需在openxr_program.cpp中开启或关闭 USE_HAND_AIM 宏
-    inline static OperationTrigger GuiOperationTriggerValue=OperationTrigger::Hand;
+    inline static OperationTrigger GuiOperationTriggerValue=OperationTrigger::Controller;
 public:
     static OperationTrigger GuiOperationTrigger();
     static void SetGuiOperationTrigger(OperationTrigger trigger);
